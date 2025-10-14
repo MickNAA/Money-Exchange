@@ -1,0 +1,159 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #2d3748;
+    background-color: #f7fafc;
+}
+
+/* Mobile-First Responsive */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Navigation */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #1a365d;
+    color: white;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+/* Converter Section */
+.converter-section {
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.converter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 500px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+input[type="number"], input[type="text"], select {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: #4299e1;
+}
+
+#swapBtn {
+    background: #4299e1;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+#swapBtn:hover {
+    background: #3182ce;
+}
+
+/* Rate Display */
+.rate-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #edf2f7;
+    border-radius: 6px;
+}
+
+/* Currency Cards */
+.currency-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.currency-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.rate {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2d3748;
+    display: block;
+    margin: 0.5rem 0;
+}
+
+.change {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.change.positive { color: #48bb78; }
+.change.negative { color: #f56565; }
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    .converter-form {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .input-group {
+        flex-direction: column;
+    }
+    
+    #swapBtn {
+        margin: 0 1rem;
+    }
+}
+
+/* Chart Container */
+#chart-section {
+    padding: 2rem 1rem;
+    background: white;
+    margin: 2rem 0;
+}
+
+#rateChart {
+    max-width: 100%;
+    height: auto;
+}

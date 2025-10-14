@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CurrencyTracker - Real-time Exchange Rates</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <div class="logo">💱 CurrencyTracker</div>
+                <div class="nav-links">
+                    <a href="#converter">Convert</a>
+                    <a href="#rates">Rates</a>
+                    <a href="#login">Login</a>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section id="converter" class="converter-section">
+                <h1>Currency Converter</h1>
+                <div class="converter-form">
+                    <div class="input-group">
+                        <input type="number" id="amount" value="1" min="0">
+                        <select id="fromCurrency">
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                        </select>
+                    </div>
+                    
+                    <button id="swapBtn">⇄</button>
+                    
+                    <div class="input-group">
+                        <input type="text" id="result" readonly>
+                        <select id="toCurrency">
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="JPY">JPY - Japanese Yen</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="rate-info">
+                    <p id="exchangeRate">1 USD = 0.85 EUR</p>
+                    <p id="lastUpdate">Last updated: <span id="timestamp"></span></p>
+                </div>
+            </section>
+
+            <section id="chart-section">
+                <h2>Exchange Rate History</h2>
+                <canvas id="rateChart" width="400" height="200"></canvas>
+            </section>
+
+            <section id="popular-pairs">
+                <h2>Popular Currency Pairs</h2>
+                <div class="currency-grid">
+                    <div class="currency-card">
+                        <h3>USD/EUR</h3>
+                        <span class="rate">0.8523</span>
+                        <span class="change positive">+1.2%</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script src="script.js"></script>
+    </body>
+</html>
