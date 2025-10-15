@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Exchange Rate Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        select {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+
+        select:hover {
+            border-color: #cbd5e0;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .timeframe-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #4a5568;
+        }
+
+        .btn:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-change {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .positive {
+            color: #48bb78;
+        }
+
+        .negative {
+            color: #f56565;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .timeframe-buttons {
+                justify-content: stretch;
+            }
+
+            .btn {
+                flex: 1;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>📊 Exchange Rate History</h1>
+            <p class="subtitle">Track real-time currency exchange rates with interactive charts</p>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>From Currency</label>
+                    <select id="fromCurrency">
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                        <option value="CHF">CHF - Swiss Franc</option>
+                        <option value="CNY">CNY - Chinese Yuan</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>To Currency</label>
+                    <select id="toCurrency">
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                        <option value="CHF">CHF - Swiss Franc</option>
+                        <option value="CNY">CNY - Chinese Yuan</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Timeframe</label>
+                    <div class="timeframe-buttons">
+                        <button class="btn" data-days="7">7D</button>
+                        <button class="btn active" data-days="30">30D</button>
+                        <button class="btn" data-days="90">90D</button>
+                        <button class="btn" data-days="365">1Y</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="rateChart"></canvas>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Current Rate</div>
+                    <div class="stat-value" id="currentRate">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Highest</div>
+                    <div class="stat-value" id="highestRate">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Lowest</div>
+                    <div class="stat-value" id="lowestRate">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Change</div>
+                    <div class="stat-value" id="rateChange">-</div>
+                    <div class="stat-change" id="percentChange">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chart;
+        let currentDays = 30;
+
+        // Initialize chart
+        function initChart() {
+            const ctx = document.getElementById('rateChart').getContext('2d');
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Exchange Rate',
+                        data: [],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#667eea',
+                        pointBorderColor: 'white',
+                        pointBorderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            cornerRadius: 8,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Rate: ' + context.parsed.y.toFixed(4);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#718096',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                color: '#718096',
+                                font: {
+                                    size: 11
+                                },
+                                callback: function(value) {
+                                    return value.toFixed(4);
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        // Generate sample data (replace with real API data)
+        function generateChartData(days) {
+            const labels = [];
+            const data = [];
+            const baseRate = 0.85 + (Math.random() * 0.3); // Random base rate
+            
+            for (let i = days; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                
+                // Format date based on timeframe
+                let dateLabel;
+                if (days <= 30) {
+                    dateLabel = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                } else {
+                    dateLabel = date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+                }
+                
+                labels.push(dateLabel);
+                
+                // Generate realistic rate variation
+                const trend = Math.sin(i / 10) * 0.02;
+                const noise = (Math.random() - 0.5) * 0.03;
+                const rate = baseRate + trend + noise;
+                data.push(parseFloat(rate.toFixed(4)));
+            }
+            
+            return { labels, data };
+        }
+
+        // Update chart with new data
+        function updateChart() {
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+            
+            const { labels, data } = generateChartData(currentDays);
+            
+            // Update chart
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = data;
+            chart.data.datasets[0].label = `${fromCurrency}/${toCurrency}`;
+            chart.update();
+            
+            // Update statistics
+            updateStats(data, fromCurrency, toCurrency);
+        }
+
+        // Update statistics cards
+        function updateStats(data, from, to) {
+            const current = data[data.length - 1];
+            const first = data[0];
+            const highest = Math.max(...data);
+            const lowest = Math.min(...data);
+            const change = current - first;
+            const percentChange = ((change / first) * 100);
+            
+            document.getElementById('currentRate').textContent = `1 ${from} = ${current.toFixed(4)} ${to}`;
+            document.getElementById('highestRate').textContent = highest.toFixed(4);
+            document.getElementById('lowestRate').textContent = lowest.toFixed(4);
+            document.getElementById('rateChange').textContent = (change >= 0 ? '+' : '') + change.toFixed(4);
+            
+            const percentElement = document.getElementById('percentChange');
+            percentElement.textContent = (percentChange >= 0 ? '+' : '') + percentChange.toFixed(2) + '%';
+            percentElement.className = 'stat-change ' + (percentChange >= 0 ? 'positive' : 'negative');
+        }
+
+        // Event listeners
+        document.getElementById('fromCurrency').addEventListener('change', updateChart);
+        document.getElementById('toCurrency').addEventListener('change', updateChart);
+
+        // Timeframe buttons
+        document.querySelectorAll('.timeframe-buttons .btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.timeframe-buttons .btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Update days and refresh chart
+                currentDays = parseInt(this.dataset.days);
+                updateChart();
+            });
+        });
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            initChart();
+            updateChart();
+        });
+    </script>
+</body>
+</html>
