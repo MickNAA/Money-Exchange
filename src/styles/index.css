@@ -1,0 +1,22 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* CSS Variables - change theme easily */
+:root {
+  --primary-color: #4299e1;
+  --secondary-color: #48bb78;
+  --danger-color: #f56565;
+  --gray-50: #f7fafc;
+  --gray-800: #2d3748;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--gray-50);
+  color: var(--gray-800);
+  line-height: 1.6;
+}
